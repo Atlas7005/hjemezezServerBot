@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "Atlas <atlas@twplayer.co>",
+  "author": "Atlas7005 <atlas@twplayer.co>",
   "license": "ISC",
   "dependencies": {
     "discord.js": "^12.5.1",
