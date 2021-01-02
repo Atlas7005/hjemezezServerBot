@@ -40,8 +40,8 @@ async function updateServers(message = updateMsg, channel = "792608728503418880"
 				embed.embed.fields.push({ name: server.name, value: `🟢 | ${server.name} - ${info.playersnum}/${info.maxplayers} | IP: ${server.ip}:${server.port}` });
 			}
 		}
-		var messages = await client.channels.cache.get(channel).messages.fetch();
-		messages.first() == null ? client.channels.cache.get(channel).send(embed).then(msg => {
+		var messages = await client.channels.cache.fetch(channel).messages.fetch();
+		messages.first() == null ? client.channels.cache.fetch(channel).send(embed).then(msg => {
 			updateMsg = msg;
 		}) : messages.first().edit(embed).then(msg => {
 			updateMsg = msg;
