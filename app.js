@@ -16,7 +16,7 @@ client.on("ready", () => {
 
 [ "guildCreate", "guildDelete", "guildMemberAdd", "guildMemberRemove" ].map(e => client.on(e, () => client.user.setActivity(client.users.cache.size+" brugere", { type: "WATCHING" })));
 
-async function updateServers(message = updateMsg, channel = "792608728503418880") { // message er updateMsg variable ved default, og channel er min egen test kanal ved default.
+function updateServers(message = updateMsg, channel = "792608728503418880") { // message er updateMsg variable ved default, og channel er min egen test kanal ved default.
 	servers = JSON.parse(fs.readFileSync(`${__dirname}/servers.json`, "utf8"));
 	var embed = {
 		embed: {
@@ -33,14 +33,15 @@ async function updateServers(message = updateMsg, channel = "792608728503418880"
 	if(message === null) {
 		for (var i = 0; i < servers.length; i++) {
 			var server = servers[i];
-			var info = await query.info(server.ip, server.port);
-			if(info instanceof Error) {
-				embed.embed.fields.push({ name: server.name, value: `🔴 | ${server.name} - 0/0 | IP: ${server.ip}:${server.port}` });
-			} else {
-				embed.embed.fields.push({ name: server.name, value: `🟢 | ${server.name} - ${info.playersnum}/${info.maxplayers} | IP: ${server.ip}:${server.port}` });
-			}
+			query.info(server.ip, server.port).then(info => {
+				if(info instanceof Error) {
+					embed.embed.fields.push({ name: server.name, value: `🔴 | ${server.name} - 0/0 | IP: ${server.ip}:${server.port}` });
+				} else {
+					embed.embed.fields.push({ name: server.name, value: `🟢 | ${server.name} - ${info.playersnum}/${info.maxplayers} | IP: ${server.ip}:${server.port}` });
+				}
+			});
 		}
-		var messages = await client.channels.cache.fetch(channel).messages.fetch();
+		var messages = client.channels.cache.fetch(channel).messages.fetch();
 		messages.first() == null ? client.channels.cache.fetch(channel).send(embed).then(msg => {
 			updateMsg = msg;
 		}) : messages.first().edit(embed).then(msg => {
@@ -49,12 +50,13 @@ async function updateServers(message = updateMsg, channel = "792608728503418880"
 	} else {
 		for (var i = 0; i < servers.length; i++) {
 			var server = servers[i];
-			var info = await query.info(server.ip, server.port);
-			if(info instanceof Error) {
-				embed.embed.fields.push({ name: server.name, value: `🔴 | ${server.name} - 0/0 | IP: ${server.ip}:${server.port}` });
-			} else {
-				embed.embed.fields.push({ name: server.name, value: `🟢 | ${server.name} - ${info.playersnum}/${info.maxplayers} | IP: ${server.ip}:${server.port}` });
-			}
+			query.info(server.ip, server.port).then(info => {
+				if(info instanceof Error) {
+					embed.embed.fields.push({ name: server.name, value: `🔴 | ${server.name} - 0/0 | IP: ${server.ip}:${server.port}` });
+				} else {
+					embed.embed.fields.push({ name: server.name, value: `🟢 | ${server.name} - ${info.playersnum}/${info.maxplayers} | IP: ${server.ip}:${server.port}` });
+				}
+			});
 		}
 		updateMsg.edit(embed).then(msg => {
 			updateMsg = msg;
